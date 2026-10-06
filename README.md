@@ -115,16 +115,6 @@ radicado distinto a su nombre. Según cuál fecha del otro radicado caiga dentro
 la ventana salen cuatro señales: rearresto legalizado, reimputación, caso abierto
 y rearresto policial.
 
-El problema es desde cuándo contar. Cuando hay boleta de salida la ventana
-arranca ahí. Cuando no la hay, porque el expediente registró la medida pero no la
-salida, se imputa sumándole a la fecha de la medida el promedio de días entre
-legalización y boleta de salida. Ese promedio no es uno solo para toda la base:
-se calcula por celdas de casos parecidos, combinando juzgado, delito y municipio,
-y a cada caso se le asigna el de su celda. Si la celda más específica no tiene
-casos suficientes se baja un escalón, se suelta el juzgado y después el
-municipio, hasta el promedio global que queda como último recurso. Cada caso
-guarda con qué escalón se resolvió (`nivel_match`) y de qué tamaño era su celda
-(`n_celda_match`), para poder auditarlo.
 
 El script trae además un bloque de reparación de fechas imposibles, que son
 errores de digitación del expediente, años como 3018 o 7201. Se corrigen dentro
@@ -193,42 +183,6 @@ señales y motores.
 
 ---
 
-## Decisiones que condicionan la lectura
-
-**Lo otorgado, no lo solicitado.** La base registra la medida que se impuso, no la
-que el fiscal pidió. Un caso sin medida puede ser uno donde no se solicitó o uno
-donde el juez la negó, y la fuente no los distingue. Esto afecta la lectura del
-embudo y del contraste final.
-
-**Etiquetas selectivas.** El riesgo solo se observa en quienes salieron. De los que
-quedaron detenidos no se sabe si habrían reincidido, así que el modelo se entrena
-sobre una muestra seleccionada por la propia decisión que se quiere evaluar. Es
-el problema de *selective labels* (Kleinberg et al., 2018). No se resuelve con
-estos datos, pero acota lo que se puede concluir.
-
-**Fuga de información.** Las variables de historial calculadas sobre toda la vida
-de la persona (número de procesos, de delitos y penas totales) predicen la
-reincidencia casi por definición, porque incluyen los procesos posteriores a la
-captura que se está evaluando: el número de procesos por cédula promediaba 1,93
-entre los no reincidentes y 6,67 entre los reincidentes. Esas columnas se
-excluyen (`COLUMNAS_CON_FUGA` en la configuración) y el historial se reconstruye
-estrictamente hacia atrás en `R/04_historial.R`. Con la pena pasa lo mismo: la
-del delito sentenciado es información posterior a la captura, así que la tabla de
-penas por artículo se armó solo con los delitos de la captura.
-
-**Nulos y no ceros.** Los casos sin ventana de seguimiento quedan en nulo. Son los
-que no tienen ni boleta de salida ni fecha de medida: si no hay desde dónde
-contar los 365 días, marcarlos como cero diría que no hubo reincidencia cuando en
-realidad no se pudo mirar.
-
-**Variables del expediente, no de la persona.** En un proceso con varias personas
-capturadas, las variables procesales se atribuyen a todas. Si el juez impuso
-medida a uno solo de tres capturados, la base no lo distingue.
-
-**Un nulo no siempre es una etapa que no ocurrió.** Puede haber ocurrido sin quedar
-registrada, así que los porcentajes del embudo son un piso.
-
----
 
 ## Cómo correr
 
