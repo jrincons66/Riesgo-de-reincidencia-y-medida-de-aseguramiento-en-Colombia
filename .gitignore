@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------------------
+# Datos. No subir: las bases traen nombres y cedulas reales.
+# ---------------------------------------------------------------------------
+*.parquet
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.dta
+*.sav
+*.rds
+*.RData
+*.feather
+datos/
+data/
+
+# Salidas de las corridas
+modelos/corridas/
+modelos/runs/
+salidas/
+outputs/
+graficos/
+*.png
+*.pdf
+*.docx
+*.pptx
+
+# excepcion: imagenes que si van en el README
+!docs/**
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.python-version
+
+# R
+.Rproj.user/
+.Rhistory
+.Ruserdata
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
